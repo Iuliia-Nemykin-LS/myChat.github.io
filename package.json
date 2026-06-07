@@ -1,0 +1,15 @@
+{
+  "name": "qa-automation-assistant",
+  "version": "1.0.0",
+  "description": "QA Automation AI chatbot with Gemini and SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "chatbot": "node server.js"
+  },
+  "keywords": ["gemini", "chatbot", "qa-automation", "alpinejs", "sqlite"],
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^2.8.0"
+  }
+}

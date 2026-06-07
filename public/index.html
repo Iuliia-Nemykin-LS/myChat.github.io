@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA Automation Assistant</title>
+  <link rel="stylesheet" href="/style.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+</head>
+<body>
+  <div class="app" x-data="chatApp()" x-init="init()">
+    <header class="header">
+      <div class="brand">
+        <div class="logo">✦</div>
+        <div>
+          <h1>QA Automation Assistant</h1>
+          <p>High-level QA automation guidance · powered by Gemini</p>
+        </div>
+      </div>
+      <button
+        class="btn-clear"
+        @click="clearHistory()"
+        :disabled="loading || messages.length === 0"
+      >
+        Clear history
+      </button>
+    </header>
+
+    <div class="error-banner" x-show="error" x-text="error" x-cloak></div>
+
+    <section class="chat-panel">
+      <div class="messages" x-ref="messages">
+        <template x-if="messages.length === 0 && !loading">
+          <div class="empty-state">
+            <div class="icon">💬</div>
+            <p><strong>Ask a QA automation question</strong></p>
+            <p>Test strategy, frameworks, CI/CD, Playwright, Cypress, and more.</p>
+          </div>
+        </template>
+
+        <template x-for="msg in messages" :key="msg.id">
+          <div class="message" :class="msg.role">
+            <div class="avatar" x-text="msg.role === 'user' ? 'You' : 'QA'"></div>
+            <div class="bubble" x-text="msg.content"></div>
+          </div>
+        </template>
+
+        <template x-if="loading">
+          <div class="message assistant">
+            <div class="avatar">QA</div>
+            <div class="typing">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <form class="composer" @submit.prevent="sendMessage()">
+        <textarea
+          x-model="input"
+          placeholder="Ask about test automation, frameworks, CI/CD…"
+          rows="1"
+          :disabled="loading"
+          @keydown.enter.prevent="if (!$event.shiftKey) sendMessage()"
+        ></textarea>
+        <button class="btn-send" type="submit" :disabled="loading || !input.trim()">
+          Send
+        </button>
+      </form>
+    </section>
+  </div>
+
+  <style>[x-cloak] { display: none !important; }</style>
+
+  <script>
+    function chatApp() {
+      return {
+        messages: [],
+        input: "",
+        loading: false,
+        error: "",
+
+        async init() {
+          await this.loadHistory();
+        },
+
+        async loadHistory() {
+          try {
+            const res = await fetch("/api/history");
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Failed to load history");
+            this.messages = data.messages;
+            this.$nextTick(() => this.scrollToBottom());
+          } catch (err) {
+            this.error = err.message;
+          }
+        },
+
+        async sendMessage() {
+          const text = this.input.trim();
+          if (!text || this.loading) return;
+
+          this.error = "";
+          this.input = "";
+          this.loading = true;
+
+          const optimisticId = Date.now();
+          this.messages.push({ id: optimisticId, role: "user", content: text });
+          this.$nextTick(() => this.scrollToBottom());
+
+          try {
+            const res = await fetch("/api/chat", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ message: text }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Chat request failed");
+            this.messages = data.messages;
+          } catch (err) {
+            this.messages = this.messages.filter((m) => m.id !== optimisticId);
+            this.error = err.message;
+          } finally {
+            this.loading = false;
+            this.$nextTick(() => this.scrollToBottom());
+          }
+        },
+
+        async clearHistory() {
+          if (this.loading || this.messages.length === 0) return;
+          if (!confirm("Clear all chat history from the database?")) return;
+
+          this.error = "";
+          this.loading = true;
+          try {
+            const res = await fetch("/api/history", { method: "DELETE" });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Failed to clear history");
+            this.messages = data.messages;
+          } catch (err) {
+            this.error = err.message;
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        scrollToBottom() {
+          const el = this.$refs.messages;
+          if (el) el.scrollTop = el.scrollHeight;
+        },
+      };
+    }
+  </script>
+</body>
+</html>
