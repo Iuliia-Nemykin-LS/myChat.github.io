@@ -32,23 +32,23 @@ Built with HTML, CSS, Alpine.js (frontend) and Node.js (backend).
 
 4. Open **http://localhost:3000**
 
-## GitHub Pages
+## GitHub Pages (live chat)
+
+**Live chat:** **https://iuliia-nemykin-ls.github.io/myChat.github.io/**
 
 Repository: **https://github.com/Iuliia-Nemykin-LS/myChat.github.io**
 
-Live project page (after setup): **https://iuliia-nemykin-ls.github.io/myChat.github.io/**
+On GitHub Pages the chat runs in your browser:
+- Click **API Key** and paste your [Gemini API key](https://aistudio.google.com/apikey)
+- History is saved in **localStorage** (browser only)
 
-### Enable Pages (required once)
+For SQLite history + server-side API key, run locally with `npm start`.
 
-If the GitHub Action fails with `Get Pages site failed`, enable Pages manually:
+### Pages settings
 
-1. Open **https://github.com/Iuliia-Nemykin-LS/myChat.github.io/settings/pages**
-2. Under **Build and deployment** → **Source**, select **GitHub Actions**
-3. Go to **Actions** tab → open the failed workflow → click **Re-run all jobs**
+Use **Deploy from a branch** → `main` → folder **`/docs`**
 
-**Alternative (no Actions):** On the same Pages settings page, choose **Deploy from a branch** → branch `main` → folder `/docs` → Save.
-
-> **Note:** GitHub Pages serves static files only. The chatbot backend (Node.js + SQLite + Gemini API) must run locally. The Pages site documents the project and how to run it.
+Or enable **GitHub Actions** as the Pages source and re-run the workflow.
 
 ## Project structure
 
