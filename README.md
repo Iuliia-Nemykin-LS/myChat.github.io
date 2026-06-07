@@ -34,7 +34,9 @@ Built with HTML, CSS, Alpine.js (frontend) and Node.js (backend).
 
 ## GitHub Pages
 
-The live demo page is published at GitHub Pages (project landing + setup guide).
+Live project page: **https://iuliia-nemykin-ls.github.io/myChat.github.io/**
+
+Repository: **https://github.com/Iuliia-Nemykin-LS/myChat.github.io**
 
 > **Note:** GitHub Pages serves static files only. The chatbot backend (Node.js + SQLite + Gemini API) must run locally or on a server. The Pages site documents the project and how to run it.
 
