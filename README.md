@@ -34,11 +34,21 @@ Built with HTML, CSS, Alpine.js (frontend) and Node.js (backend).
 
 ## GitHub Pages
 
-Live project page: **https://iuliia-nemykin-ls.github.io/myChat.github.io/**
-
 Repository: **https://github.com/Iuliia-Nemykin-LS/myChat.github.io**
 
-> **Note:** GitHub Pages serves static files only. The chatbot backend (Node.js + SQLite + Gemini API) must run locally or on a server. The Pages site documents the project and how to run it.
+Live project page (after setup): **https://iuliia-nemykin-ls.github.io/myChat.github.io/**
+
+### Enable Pages (required once)
+
+If the GitHub Action fails with `Get Pages site failed`, enable Pages manually:
+
+1. Open **https://github.com/Iuliia-Nemykin-LS/myChat.github.io/settings/pages**
+2. Under **Build and deployment** → **Source**, select **GitHub Actions**
+3. Go to **Actions** tab → open the failed workflow → click **Re-run all jobs**
+
+**Alternative (no Actions):** On the same Pages settings page, choose **Deploy from a branch** → branch `main` → folder `/docs` → Save.
+
+> **Note:** GitHub Pages serves static files only. The chatbot backend (Node.js + SQLite + Gemini API) must run locally. The Pages site documents the project and how to run it.
 
 ## Project structure
 
